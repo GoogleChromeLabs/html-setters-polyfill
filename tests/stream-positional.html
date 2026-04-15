@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Stream Positional Tests</title>
+  <script src="../index.js?v=1"></script>
+  <script src="resources/test-harness.js"></script>
+  <style>
+    .pass { color: green; }
+    .fail { color: red; }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <div id="results"></div>
+  <script>
+    (async function() {
+      const container = document.getElementById('container');
+
+      const reset = () => {
+        container.innerHTML = '<div id="target">target</div>';
+        return document.getElementById('target');
+      };
+
+      await test('streamPrependHTMLUnsafe', async () => {
+        const target = reset();
+        const stream = target.streamPrependHTMLUnsafe();
+        const writer = stream.getWriter();
+        await writer.write('<span>prepend</span>');
+        await writer.close();
+        assertEquals(target.firstChild.textContent, 'prepend');
+      });
+
+      await test('streamBeforeHTMLUnsafe', async () => {
+        const target = reset();
+        const stream = target.streamBeforeHTMLUnsafe();
+        const writer = stream.getWriter();
+        await writer.write('<span>before</span>');
+        await writer.close();
+        assertEquals(container.firstChild.textContent, 'before');
+      });
+
+      await test('streamAfterHTMLUnsafe', async () => {
+        const target = reset();
+        const stream = target.streamAfterHTMLUnsafe();
+        const writer = stream.getWriter();
+        await writer.write('<span>after</span>');
+        await writer.close();
+        assertEquals(container.lastChild.textContent, 'after');
+      });
+
+      await test('streamAfterHTMLUnsafe on Text node', async () => {
+        const target = reset();
+        const textNode = document.createTextNode('text');
+        target.appendChild(textNode);
+        const stream = textNode.streamAfterHTMLUnsafe();
+        const writer = stream.getWriter();
+        await writer.write('<span>after text</span>');
+        await writer.close();
+        assertEquals(target.lastChild.textContent, 'after text');
+      });
+
+      await test('streamReplaceWithHTMLUnsafe', async () => {
+        const target = reset();
+        const stream = target.streamReplaceWithHTMLUnsafe();
+        const writer = stream.getWriter();
+        await writer.write('<span>replaced</span>');
+        await writer.close();
+        assertEquals(container.firstChild.textContent, 'replaced');
+      });
+    })();
+  </script>
+</body>
+</html>

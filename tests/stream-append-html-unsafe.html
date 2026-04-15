@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>streamAppendHTMLUnsafe Tests</title>
+  <script src="../index.js?v=1"></script>
+  <script src="resources/test-harness.js"></script>
+  <style>
+    .pass { color: green; }
+    .fail { color: red; }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <div id="results"></div>
+  <script>
+    (async function() {
+      await test('streamAppendHTMLUnsafe', async () => {
+        const container = document.getElementById('container');
+        container.innerHTML = '<div>existing</div>';
+        const stream = container.streamAppendHTMLUnsafe();
+        const writer = stream.getWriter();
+        await writer.write('<span>append</span>');
+        await writer.close();
+        assertEquals(container.lastChild.textContent, 'append');
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>streamHTML Tests</title>
+  <script src="../index.js?v=1"></script>
+  <script src="resources/test-harness.js"></script>
+  <style>
+    .pass { color: green; }
+    .fail { color: red; }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <div id="results"></div>
+  <script>
+    (async function() {
+      if ('setHTML' in Element.prototype) {
+        await test('streamHTML', async () => {
+          const container = document.getElementById('container');
+          container.innerHTML = '';
+          const stream = container.streamHTML();
+          const writer = stream.getWriter();
+          await writer.write('<div>hello</div>');
+          await writer.close();
+          assertEquals(container.firstChild.textContent, 'hello');
+        });
+
+        await test('streamHTML removes scripts', async () => {
+          const container = document.getElementById('container');
+          container.innerHTML = '';
+          const stream = container.streamHTML();
+          const writer = stream.getWriter();
+          await writer.write('<span>safe</span><script>alert(1)</' + 'script>');
+          await writer.close();
+          assertFalse(!!container.querySelector('script'), 'Scripts should be removed');
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>setHTMLUnsafe Tests</title>
+  <script src="../index.js?v=1"></script>
+  <script src="resources/test-harness.js"></script>
+  <style>
+    .pass { color: green; }
+    .fail { color: red; }
+  </style>
+</head>
+<body>
+  <div id="results"></div>
+  <script>
+    (async function() {
+      for (const containerType of ['Element', 'ShadowRoot']) {
+        const createContainer = () => {
+          if (containerType == 'ShadowRoot') {
+            return document.createElement('div').attachShadow({mode: 'open'});
+          } else if (containerType == 'Element') {
+            return document.createElement('div');
+          }
+        };
+
+        await test(`${containerType}: setHTMLUnsafe with no shadowdom.`, async () => {
+          const container = createContainer();
+          container.setHTMLUnsafe('<span title=hello>world</span>');
+
+          assertEquals(container.children.length, 1, 'Only one child node should be created.');
+          assertEquals(container.firstChild.tagName, 'SPAN', 'The child element should be a span.');
+          assertEquals(container.firstChild.getAttribute('title'), 'hello',
+            'The title attribute should be set to hello.');
+          assertEquals(container.firstChild.childNodes.length, 1,
+            'The span should have one child.');
+          assertTrue(container.firstChild.childNodes[0] instanceof Text,
+            'The spans child should be a text node.');
+          assertEquals(container.firstChild.textContent, 'world',
+            'The spans textContent should be world.');
+        });
+
+        await test(`${containerType}: setHTMLUnsafe with shadowdom.`, async () => {
+          const container = createContainer();
+          container.setHTMLUnsafe(`<div><template shadowrootmode=open><div>hello</div></template></div>`);
+
+          assertEquals(container.children.length, 1, 'One child should be created in the container.');
+          const shadowRoot = container.firstChild.shadowRoot;
+          assertTrue(!!shadowRoot, 'The containers child should have a ShadowRoot.');
+          assertEquals(shadowRoot.children.length, 1, 'One child should be created in the ShadowRoot.');
+          assertEquals(shadowRoot.firstChild.textContent, 'hello',
+            'The ShadowRoots childs textContent should be hello.');
+        });
+      }
+
+      await test('template.setHTMLUnsafe() should modify template content fragment rather than actual children.', async () => {
+        const template = document.createElement('template');
+        template.setHTMLUnsafe('<div>hello world</div>');
+
+        assertEquals(template.children.length, 0, 'template should not have any child nodes.');
+        assertEquals(template.content.children.length, 1, 'template content should have a child div.');
+        assertEquals(template.content.children[0].textContent, 'hello world', 'text content should be set.');
+      });
+
+
+    })();
+  </script>
+</body>
+</html>

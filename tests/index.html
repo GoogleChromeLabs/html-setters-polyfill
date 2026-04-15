@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML Setters Polyfill Tests</title>
+  <style>
+    :root {
+      --bg-color: #121212;
+      --card-bg: #1e1e1e;
+      --text-color: #e0e0e0;
+      --accent-color: #bb86fc;
+      --pass-color: #03dac6;
+      --fail-color: #cf6679;
+      --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      color: var(--accent-color);
+      margin-bottom: 2rem;
+    }
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 1200px;
+    }
+    .test-card {
+      background-color: var(--card-bg);
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .test-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+    }
+    .test-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .test-name {
+      font-weight: bold;
+      font-size: 1.1rem;
+      word-break: break-all;
+    }
+    .status-badge {
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+    .status-loading { background-color: #555; color: #ddd; }
+    .status-pass { background-color: var(--pass-color); color: #000; }
+    .status-fail { background-color: var(--fail-color); color: #000; }
+    
+    iframe {
+      border: 1px solid #333;
+      border-radius: 4px;
+      background-color: #fff; /* Tests assume white background usually */
+      width: 100%;
+      height: 150px;
+      transition: opacity 0.3s;
+    }
+    .hidden {
+      display: none;
+    }
+    .pass-message {
+      color: var(--pass-color);
+      font-weight: bold;
+      text-align: center;
+      font-size: 1.5rem;
+      padding: 2rem 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>HTML Setters Polyfill Test Runner</h1>
+  <div class="test-grid" id="grid"></div>
+
+  <script>
+    const tests = [
+      'positional-methods.html',
+      'setHTMLUnsafe-runScripts.tentative.html',
+      'setHTMLUnsafe.html',
+      'stream-append-html-unsafe.html',
+      'stream-append-html.html',
+      'stream-html-unsafe.html',
+      'stream-html.html',
+      'stream-positional.html'
+    ];
+
+    const grid = document.getElementById('grid');
+
+    tests.forEach(testFile => {
+      const card = document.createElement('div');
+      card.className = 'test-card';
+      card.id = `card-${testFile}`;
+      
+      card.innerHTML = `
+        <div class="test-header">
+          <span class="test-name">${testFile}</span>
+          <span class="status-badge status-loading" id="status-${testFile}">Running</span>
+        </div>
+        <div class="test-content" id="content-${testFile}">
+          <iframe src="${testFile}" id="iframe-${testFile}"></iframe>
+        </div>
+      `;
+      
+      grid.appendChild(card);
+    });
+
+    window.addEventListener('message', (event) => {
+      const data = event.data;
+      if (data && data.type === 'test-complete') {
+        const testFile = data.file;
+        const success = data.success;
+        
+        const statusBadge = document.getElementById(`status-${testFile}`);
+        const contentDiv = document.getElementById(`content-${testFile}`);
+        
+        if (statusBadge) {
+          if (success) {
+            statusBadge.textContent = 'PASS';
+            statusBadge.className = 'status-badge status-pass';
+            // Replace iframe with "pass" as requested
+            contentDiv.innerHTML = '<div class="pass-message">PASS</div>';
+          } else {
+            statusBadge.textContent = 'FAIL';
+            statusBadge.className = 'status-badge status-fail';
+            // Keep iframe visible for debugging
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

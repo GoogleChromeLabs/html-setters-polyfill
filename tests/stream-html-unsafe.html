@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>streamHTMLUnsafe Tests</title>
+  <script src="../index.js?v=1"></script>
+  <script src="resources/test-harness.js"></script>
+  <style>
+    .pass { color: green; }
+    .fail { color: red; }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <div id="results"></div>
+  <script>
+    (async function() {
+      await test('streamHTMLUnsafe', async () => {
+        const container = document.getElementById('container');
+        container.innerHTML = '';
+        const stream = container.streamHTMLUnsafe();
+        const writer = stream.getWriter();
+        await writer.write('<div>hello</div>');
+        await writer.close();
+        assertEquals(container.firstChild.textContent, 'hello');
+      });
+
+      await test('streamHTMLUnsafe with runScripts: true', async () => {
+        const container = document.getElementById('container');
+        container.innerHTML = '';
+        const stream = container.streamHTMLUnsafe({ runScripts: true });
+        const writer = stream.getWriter();
+        await writer.write('<script>window.streamed_scripts_run = true;</' + 'script>');
+        await writer.close();
+        assert(window.streamed_scripts_run, 'Scripts should run');
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Positional Methods Tests</title>
+  <script src="../index.js?v=1"></script>
+  <script src="resources/test-harness.js"></script>
+  <style>
+    .pass { color: green; }
+    .fail { color: red; }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <div id="results"></div>
+  <script>
+    (async function() {
+      const container = document.getElementById('container');
+
+      const reset = () => {
+        container.innerHTML = '<div id="target">target</div>';
+        return document.getElementById('target');
+      };
+
+      await test('appendHTMLUnsafe', async () => {
+        const target = reset();
+        target.appendHTMLUnsafe('<span>append</span>');
+        assertEquals(target.lastChild.textContent, 'append');
+      });
+
+      await test('prependHTMLUnsafe', async () => {
+        const target = reset();
+        target.prependHTMLUnsafe('<span>prepend</span>');
+        assertEquals(target.firstChild.textContent, 'prepend');
+      });
+
+      await test('beforeHTMLUnsafe', async () => {
+        const target = reset();
+        target.beforeHTMLUnsafe('<span>before</span>');
+        assertEquals(container.firstChild.textContent, 'before');
+      });
+
+      await test('afterHTMLUnsafe', async () => {
+        const target = reset();
+        target.afterHTMLUnsafe('<span>after</span>');
+        assertEquals(container.lastChild.textContent, 'after');
+      });
+
+      await test('replaceWithHTMLUnsafe', async () => {
+        const target = reset();
+        target.replaceWithHTMLUnsafe('<span>replaced</span>');
+        assertEquals(container.firstChild.textContent, 'replaced');
+      });
+
+      await test('appendHTMLUnsafe with runScripts and DSD', async () => {
+        const target = reset();
+        window.did_run = false;
+        target.appendHTMLUnsafe('<div><template shadowrootmode=open><script>window.did_run = true;</' + 'script></template></div>', { runScripts: true });
+        assertTrue(!!target.lastChild.shadowRoot, 'Shadow root should be created');
+        assertTrue(window.did_run, 'Script inside shadow root should run');
+        window.did_run = false;
+      });
+
+      await test('prependHTMLUnsafe with runScripts and DSD', async () => {
+        const target = reset();
+        window.did_run = false;
+        target.prependHTMLUnsafe('<div><template shadowrootmode=open><script>window.did_run = true;</' + 'script></template></div>', { runScripts: true });
+        assertTrue(!!target.firstChild.shadowRoot, 'Shadow root should be created');
+        assertTrue(window.did_run, 'Script inside shadow root should run');
+        window.did_run = false;
+      });
+
+      if ('setHTML' in Element.prototype) {
+        await test('appendHTML', async () => {
+          const target = reset();
+          target.appendHTML('<span>append safe</span>');
+          assertEquals(target.lastChild.textContent, 'append safe');
+        });
+
+        await test('prependHTML', async () => {
+          const target = reset();
+          target.prependHTML('<span>prepend safe</span>');
+          assertEquals(target.firstChild.textContent, 'prepend safe');
+        });
+
+        await test('beforeHTML', async () => {
+          const target = reset();
+          target.beforeHTML('<span>before safe</span>');
+          assertEquals(container.firstChild.textContent, 'before safe');
+        });
+
+        await test('afterHTML', async () => {
+          const target = reset();
+          target.afterHTML('<span>after safe</span>');
+          assertEquals(container.lastChild.textContent, 'after safe');
+        });
+
+        await test('replaceWithHTML', async () => {
+          const target = reset();
+          target.replaceWithHTML('<span>replaced safe</span>');
+          assertEquals(container.firstChild.textContent, 'replaced safe');
+        });
+        
+        // Test safety (scripts removed)
+        await test('appendHTML removes scripts', async () => {
+          const target = reset();
+          let options = {};
+          if (typeof Sanitizer !== 'undefined') {
+            options = { sanitizer: new Sanitizer() };
+          }
+          target.appendHTML('<span>safe</span><script>alert(1)</' + 'script>', options);
+          assertFalse(!!target.querySelector('script'), 'Scripts should be removed');
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
