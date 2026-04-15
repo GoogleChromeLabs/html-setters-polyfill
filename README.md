@@ -34,8 +34,7 @@ npm run build
 ```
 
 ## Testing
-WPT tests are imported into the `tests/` directory as a guide.
-Manual tests for streaming are in `tests/streaming-tests.html`.
+WPT tests are imported into the `tests/` directory and adjusted to not require the WPT infra.
 
 ## Limitations
 - Streaming is not natively "streamed" to the parser (it buffers first).
