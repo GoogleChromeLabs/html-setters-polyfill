@@ -7,9 +7,23 @@
     "build": "uglifyjs index.js -o index.min.js -c -m",
     "test": "echo "Error: no test specified" && exit 1"
   },
+  "keywords": [
+    "setHTMLUnsafe",
+    "parseHTMLUnsafe"
+  ],
+  "author": {
+    "name": "Noam Rosenthal",
+    "email": "nrosenthal@google.com"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:GoogleChromeLabs/html-setters-polyfill.git"
+  },
+  "bugs": {
+    "url": "https://github.com/GoogleChromeLabs/html-setters-polyfill/issues"
+  },
   "devDependencies": {
     "uglify-js": "^3.17.4"
-  },
-  "author": "",
-  "license": "MIT"
+  }
 }

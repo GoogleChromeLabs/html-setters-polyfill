@@ -3,6 +3,7 @@
 A polyfill for the new HTML `*Unsafe` setters (setHTMLUnsafe, parseHTMLUnsafe, and insertion variants) as proposed in [WHATWG HTML issue #11669](https://github.com/whatwg/html/issues/11669).
 
 ## Features
+
 - `setHTMLUnsafe` on `Element` and `ShadowRoot`.
 - Insertion variants: `appendHTMLUnsafe`, `prependHTMLUnsafe`, `beforeHTMLUnsafe`, `afterHTMLUnsafe`, `replaceWithHTMLUnsafe`.
 - Static `Document.parseHTMLUnsafe(html)`.
@@ -26,16 +27,19 @@ writer.write('World!</div>');
 writer.close();
 ```
 
-## Build
-The only build step is minification. Use `uglify-js`:
-```bash
-npm install
-npm run build
-```
-
-## Testing
-WPT tests are imported into the `tests/` directory and adjusted to not require the WPT infra.
-
 ## Limitations
+
 - Streaming is not natively "streamed" to the parser (it buffers first).
 - Declarative Shadow DOM (DSD) is supported if `innerHTML` or `createContextualFragment` supports it in the target browser.
+
+## License
+
+[Apache 2.0](LICENSE)
+
+## Contributing
+
+We'd love to accept your patches and contributions to this project. See the enclosed [`CONTRIBUTING.md`](./CONTRIBUTING.md) for details.
+
+## Disclaimer
+
+This is not an officially supported Google product. This project is not eligible for the [Google Open Source Software Vulnerability Rewards Program](https://bughunters.google.com/open-source-security).
