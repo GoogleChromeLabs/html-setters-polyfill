@@ -30,6 +30,7 @@ writer.close();
 ## Limitations
 
 - Streaming is not natively "streamed" to the parser (it buffers first).
+- Safe streaming is only supported if `setHTML` is supported in the target browser (not Safari).
 - Declarative Shadow DOM (DSD) is supported if `innerHTML` or `createContextualFragment` supports it in the target browser.
 
 ## License

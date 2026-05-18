@@ -2,10 +2,13 @@
   "name": "html-setters-polyfill",
   "version": "1.0.0",
   "description": "Polyfill for new HTML setters (setHTMLUnsafe, parseHTMLUnsafe, and insertion variants)",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "build": "uglifyjs index.js -o index.min.js -c -m",
-    "test": "echo "Error: no test specified" && exit 1"
+    "test": "run-p test:server test:unit",
+    "test:server": "node tests/server/server.js",
+    "test:unit": "wdio --suite=unit"
   },
   "keywords": [
     "setHTMLUnsafe",
@@ -24,6 +27,12 @@
     "url": "https://github.com/GoogleChromeLabs/html-setters-polyfill/issues"
   },
   "devDependencies": {
-    "uglify-js": "^3.17.4"
+    "@wdio/cli": "^9.23.0",
+    "@wdio/local-runner": "^9.23.0",
+    "@wdio/mocha-framework": "^9.23.0",
+    "@wdio/spec-reporter": "^9.20.0",
+    "fs-extra": "^11.3.4",
+    "uglify-js": "^3.17.4",
+    "webdriverio": "^9.24.0"
   }
 }

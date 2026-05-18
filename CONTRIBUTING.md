@@ -38,6 +38,22 @@ npm run build
 
 WPT tests are imported into the `tests/` directory and adjusted to not require the WPT infra.
 
+To test the full suite run:
+
+- `npm run test:server`
+
+And then in a separate terminal you can test local tests:
+
+- `npm run test:unit`
+
+To test a subset of browsers or tests, run commands like the following:
+
+- `npm run test:unit -- --browsers=chrome`
+- `npm run test:unit -- --browsers=chrome --tests=test-01`
+- `npm run test:unit -- --browsers=chrome --tests=nested`
+
+New tests should be added for all new functionality either locally or via WPTs (preferred).
+
 ### Code reviews
 
 All submissions, including submissions by project members, require review. We
