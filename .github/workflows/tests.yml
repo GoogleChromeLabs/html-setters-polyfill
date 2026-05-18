@@ -1,0 +1,55 @@
+name: Run tests
+permissions:
+  contents: read
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+  chrome-unit-tests:
+    name: Run Chrome unit tests
+    # Runs best on macos for CI as linux requires extra chrome flags
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+      - name: NPM install
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Run server
+        run: npm run test:server &
+      - name: Run tests for chrome
+        run: npm run test:unit -- --browsers=chrome
+  firefox-unit-tests:
+    name: Run Firefox unit tests
+    # Runs best on macos for CI as linux requires extra setup
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+      - name: NPM install
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Run server
+        run: npm run test:server &
+      - name: Run tests for firefox
+        run: npm run test:unit -- --browsers=firefox
+  safari-unit-tests:
+    name: Run Safari unit tests
+    # Requires macos
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+      - name: NPM install
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Run server
+        run: npm run test:server &
+      - name: Run tests for safari
+        run: npm run test:unit -- --browsers=safari
