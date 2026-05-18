@@ -1,17 +1,17 @@
 # HTML Setters Polyfill
 
-A polyfill for the new HTML `*Unsafe` setters (setHTMLUnsafe, parseHTMLUnsafe, and insertion variants) as proposed in [WHATWG HTML issue #11669](https://github.com/whatwg/html/issues/11669).
+A polyfill for new HTML setters (`streamHTML`, `appendHTML`... etc. and unsafe variants) as proposed in [WHATWG HTML issue #11669](https://github.com/whatwg/html/issues/11669).
 
 ## Features
 
-- `setHTMLUnsafe` on `Element` and `ShadowRoot`.
-- Insertion variants: `appendHTMLUnsafe`, `prependHTMLUnsafe`, `beforeHTMLUnsafe`, `afterHTMLUnsafe`, `replaceWithHTMLUnsafe`.
-- Static `Document.parseHTMLUnsafe(html)`.
-- **Streaming Support**: `streamHTMLUnsafe`, `streamAppendHTMLUnsafe`, etc. return a `WritableStream` that buffers and applies the HTML on close.
+- **Insertion variants**: `setHTML`, `beforeHTML`, `afterHTML` on `Element` and `ShadowRoot`.
+- **Child insertion variants**: `replaceWithHTML`, `prependHTML`, `appendHTML` on nodes with children.
+- **Insertion Unsafe variants**: `setHTMLUnsafe`, `appendHTMLUnsafe`, `prependHTMLUnsafe`, `beforeHTMLUnsafe`, `afterHTMLUnsafe`, `replaceWithHTMLUnsafe`.
+- **Streaming variants**: `steamHTML`, `streamHTMLUnsafe`, `streamBeforeHTML`...etc. return a `WritableStream` that buffers and applies the HTML on close.
 - Supports `runScripts: true` using `createContextualFragment`.
 - JSDoc types for TypeScript compatibility in JS.
 - No dependencies.
-- No sanitization or Trusted Types support.
+- No Trusted Types support on streaming.
 
 ## Usage
 
@@ -30,8 +30,8 @@ writer.close();
 ## Limitations
 
 - Streaming is not natively "streamed" to the parser (it buffers first).
-- Safe streaming is only supported if `setHTML` is supported in the target browser (not Safari).
-- Declarative Shadow DOM (DSD) is supported if `innerHTML` or `createContextualFragment` supports it in the target browser.
+- Safe streaming is only supported if `setHTML` is supported in the target browser (i.e. not Safari).
+- Declarative Shadow DOM (DSD) is supported if `createContextualFragment` supports it in the target browser.
 
 ## License
 
