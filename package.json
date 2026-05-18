@@ -1,6 +1,6 @@
 {
   "name": "html-setters-polyfill",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Polyfill for new HTML setters (appendHTML, streamHTML..etc. and unsafe variants)",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -8,6 +8,13 @@
   "type": "module",
   "typings": "types.d.ts",
   "main": "index.js",
+  "files": [
+    "index.js",
+    "index.min.js",
+    "types.d.ts",
+    "dist",
+    "src"
+  ],
   "scripts": {
     "build": "uglifyjs index.js -o index.min.js -c -m",
     "test": "run-p test:server test:unit",
