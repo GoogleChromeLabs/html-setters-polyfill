@@ -1,8 +1,12 @@
 {
   "name": "html-setters-polyfill",
-  "version": "1.0.0",
-  "description": "Polyfill for new HTML setters (setHTMLUnsafe, parseHTMLUnsafe, and insertion variants)",
+  "version": "0.1.0",
+  "description": "Polyfill for new HTML setters (appendHTML, streamHTML..etc. and unsafe variants)",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "type": "module",
+  "typings": "types.d.ts",
   "main": "index.js",
   "scripts": {
     "build": "uglifyjs index.js -o index.min.js -c -m",
@@ -11,8 +15,30 @@
     "test:unit": "wdio --suite=unit"
   },
   "keywords": [
+    "setHTML",
     "setHTMLUnsafe",
-    "parseHTMLUnsafe"
+    "appendHTML",
+    "appendHTMLUnsafe",
+    "prependHTML",
+    "prependHTMLUnsafe",
+    "streamHTML",
+    "streamHTMLUnsafe",
+    "streamAppendHTML",
+    "streamAppendHTMLUnsafe",
+    "streamPrependHTML",
+    "streamPrependHTMLUnsafe",
+    "beforeHTML",
+    "beforeHTMLUnsafe",
+    "afterHTML",
+    "afterHTMLUnsafe",
+    "replaceWithHTML",
+    "replaceWithHTMLUnsafe",
+    "streamReplaceWithHTML",
+    "streamReplaceWithHTMLUnsafe",
+    "streamBeforeHTML",
+    "streamBeforeHTMLUnsafe",
+    "streamAfterHTML",
+    "streamAfterHTMLUnsafe"
   ],
   "author": {
     "name": "Noam Rosenthal",
